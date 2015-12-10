@@ -3644,9 +3644,9 @@ case 404:  //M404 Enter the nominal filament width (3mm, 1.75mm ) N<3.0> or disp
             SET_OUTPUT(BEEPER);
 
             WRITE(BEEPER,HIGH);
-            delay(3);
+            delay(750);
             WRITE(BEEPER,LOW);
-            delay(3);
+            delay(3000);
           #else
 			#if !defined(LCD_FEEDBACK_FREQUENCY_HZ) || !defined(LCD_FEEDBACK_FREQUENCY_DURATION_MS)
               lcd_buzz(1000/6,100);
@@ -3656,7 +3656,29 @@ case 404:  //M404 Enter the nominal filament width (3mm, 1.75mm ) N<3.0> or disp
           #endif
           }
         }
-
+		//Turn off damn buzzer extract filament as desired
+			void lcd_move_eX()
+			{
+				if (encoderPosition != 0)
+				{
+					current_position[E_AXIS] += float((int)encoderPosition) * .1;
+					encoderPosition = 0;
+					#ifdef DELTA
+					calculate_delta(current_position);
+					plan_buffer_line(delta[X_AXIS], delta[Y_AXIS], delta[Z_AXIS], current_position[E_AXIS], manual_feedrate[E_AXIS]/60, active_extruder);
+					#else
+					plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], manual_feedrate[E_AXIS]/60, active_extruder);
+					#endif
+					lcdDrawUpdate = 1;
+				}
+				if (lcdDrawUpdate)
+				{
+					lcd_implementation_drawedit(PSTR("Extruder"), ftostr31(current_position[E_AXIS]));
+				}
+			}
+		while(!lcd_clicked()){
+		lcd_move_eX();	
+		}
         //return to normal
         if(code_seen('L'))
         {
