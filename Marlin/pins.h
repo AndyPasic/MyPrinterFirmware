@@ -589,7 +589,7 @@
     #define SDSS               25//53
     #define LED_PIN            13
 
-    #define BEEPER             33
+    #define BEEPER             -1  //was 33. gmax turned off
 
   #else
 
@@ -727,7 +727,7 @@
     #endif
   #endif
 
-  #define TEMP_BED_PIN       -1   // ANALOG NUMBERING
+  #define TEMP_BED_PIN       -1   // ANALOG NUMBERING. gmax turned off
 
   #ifdef NUM_SERVOS
     #define SERVO0_PIN         11
@@ -767,7 +767,7 @@
       #define LCD_PINS_D7 29
 
       #ifdef REPRAP_DISCOUNT_SMART_CONTROLLER
-        #define BEEPER 37
+        #define BEEPER -1   //was 3. gmax turned off
 
         #define BTN_EN1 31
         #define BTN_EN2 33
