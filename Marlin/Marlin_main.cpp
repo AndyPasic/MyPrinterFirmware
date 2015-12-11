@@ -48,14 +48,8 @@
 #include "pins_arduino.h"
 #include "math.h"
 
-#include "temperature.h"
-#include "ultralcd.h"
-#include "Marlin.h"
-#include "language.h"
 #include "cardreader.h"
-#include "temperature.h"
-#include "stepper.h"
-#include "ConfigurationStore.h"
+
 
 
 #ifdef BLINKM
@@ -204,26 +198,6 @@
 //===========================================================================
 //=============================imported variables============================
 //===========================================================================
-static void lcd_move_eX()
-	{
-	float manual_feedrate[] = MANUAL_FEEDRATE;
-	uint32_t encoder=0;
-	uint32_t encoderPosition;
-	encoderPosition = encoder;
-	uint8_t lcdDrawUpdate = 2;
-			if (encoderPosition != 0)
-				{
-					current_position[E_AXIS] += float((int)encoderPosition) * .1;
-					encoderPosition = 0;
-					#ifdef DELTA
-					calculate_delta(current_position);
-					plan_buffer_line(delta[X_AXIS], delta[Y_AXIS], delta[Z_AXIS], current_position[E_AXIS], manual_feedrate[E_AXIS]/60, active_extruder);
-					#else
-					plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], manual_feedrate[E_AXIS]/60, active_extruder);
-					#endif
-					lcdDrawUpdate = 1;
-				}
-			}
 
 //===========================================================================
 //=============================public variables=============================
@@ -3662,7 +3636,11 @@ case 404:  //M404 Enter the nominal filament width (3mm, 1.75mm ) N<3.0> or disp
         delay(100);
         LCD_ALERTMESSAGEPGM(MSG_FILAMENTCHANGE);
         uint8_t cnt=0;
-        while(!lcd_clicked()){
+		   SET_OUTPUT(BEEPER);
+           WRITE(BEEPER, 100);
+           delay(550);
+           WRITE(BEEPER,LOW);
+          while(!lcd_clicked()){
           cnt++;
           manage_heater();
           manage_inactivity(true);
@@ -3670,11 +3648,11 @@ case 404:  //M404 Enter the nominal filament width (3mm, 1.75mm ) N<3.0> or disp
           if(cnt==0)
           {
           #if BEEPER > 0
-            SET_OUTPUT(BEEPER);
-            WRITE(BEEPER,HIGH);
-            delay(750);
-            WRITE(BEEPER,LOW);
-            delay(3000);
+           // SET_OUTPUT(BEEPER);
+            //WRITE(BEEPER, 100);
+           // delay(250);
+           // WRITE(BEEPER,LOW);
+            //delay(3000);
           #else
 			#if !defined(LCD_FEEDBACK_FREQUENCY_HZ) || !defined(LCD_FEEDBACK_FREQUENCY_DURATION_MS)
               lcd_buzz(1000/6,100);
@@ -3686,7 +3664,29 @@ case 404:  //M404 Enter the nominal filament width (3mm, 1.75mm ) N<3.0> or disp
         }
 		//Turn off damn buzzer extract filament as desired
 		while(!lcd_clicked()){
-		lcd_move_eX();	
+		cnt++;
+          manage_heater();
+          manage_inactivity(true);
+          lcd_update();
+			{
+	float manual_feedrate[] = MANUAL_FEEDRATE;
+	uint32_t encoder=0;
+	uint32_t encoderPosition;
+	encoderPosition = encoder;
+	uint8_t lcdDrawUpdate = 2;
+			if (encoderPosition != 0)
+				{
+					current_position[E_AXIS] += float((int)encoderPosition) * .1;
+					encoderPosition = 0;
+					#ifdef DELTA
+					calculate_delta(current_position);
+					plan_buffer_line(delta[X_AXIS], delta[Y_AXIS], delta[Z_AXIS], current_position[E_AXIS], manual_feedrate[E_AXIS]/60, active_extruder);
+					#else
+					plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], manual_feedrate[E_AXIS]/60, active_extruder);
+					#endif
+					lcdDrawUpdate = 1;
+				}
+			}	
 		}
         //return to normal
         if(code_seen('L'))
