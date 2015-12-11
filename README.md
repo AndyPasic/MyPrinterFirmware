@@ -1,7 +1,17 @@
+# Andy's Firmware is based on Marlin 1.0.2
+
+Because I wasn't able to find the firmware for my kickstarter era gMax printer I decided to take a leap of faith and try to roll my own. The folks over at gCreate have moved on and are no longer hosting firmware (as far as I know - 2015/12/10) for the initial design and have not provided a clear/visible upgrade path.
+
+They did provide firmware to their latest printer [in their forum](http://gmaxprinter.com/forum/viewtopic.php?f=7&t=543&sid=e87cfd865ba2c12fbea933433f1b0d12#p2268) and that got me pointed in the right direction. 
+
+Between that and the current (2015/12/10) stable release of Marlin my firmware is now halfway decent.
+
+Here is the ReadMe from the offical repo:
+
 # Marlin 3D Printer Firmware
 <img align="right" src="Documentation/Logo/Marlin%20Logo%20GitHub.png" />
 
- Documentation has moved to [marlinfirmware.org](http://www.marlinfirmware.org).
+Documentation has moved to [marlinfirmware.org](http://www.marlinfirmware.org).
 
 ## Release Branch
 
